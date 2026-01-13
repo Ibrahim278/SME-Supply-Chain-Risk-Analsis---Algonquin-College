@@ -1,0 +1,202 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>Setup Backend Foundation (FastAPI)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-2-setup-backend-foundation-fastapi.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>a configured FastAPI backend with core dependencies</iWant>
+    <soThat>I can build API endpoints following established patterns</soThat>
+    <tasks>
+      <task id="1" title="Create Python virtual environment and dependencies" acs="1,2,3,6">
+        <subtask>Create backend/requirements.txt with production dependencies</subtask>
+        <subtask>Create backend/requirements-dev.txt with development dependencies</subtask>
+        <subtask>Create backend/venv and install dependencies</subtask>
+        <subtask>Verify pip list shows all packages installed</subtask>
+      </task>
+      <task id="2" title="Create backend directory structure" acs="7">
+        <subtask>Create directories: app/, api/, api/v1/, api/v1/endpoints/, models/, schemas/, services/, core/, db/, workers/, agents/</subtask>
+        <subtask>Create alembic/ and alembic/versions/</subtask>
+        <subtask>Create tests/</subtask>
+        <subtask>Add __init__.py files to all Python packages</subtask>
+      </task>
+      <task id="3" title="Configure pydantic-settings" acs="5">
+        <subtask>Create backend/app/core/config.py with Settings class</subtask>
+        <subtask>Include fields: DATABASE_URL, REDIS_URL, MINIO_URL, OPENAI_API_KEY, JWT_SECRET, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, LOG_LEVEL</subtask>
+        <subtask>Configure model_config with env_file = ".env"</subtask>
+      </task>
+      <task id="4" title="Configure structlog for JSON logging" acs="6">
+        <subtask>Create backend/app/core/logging.py with structlog config</subtask>
+        <subtask>Configure TimeStamper, JSONRenderer, request_id processor</subtask>
+      </task>
+      <task id="5" title="Create FastAPI application entry point" acs="2,8,9,10">
+        <subtask>Create backend/app/main.py with FastAPI app</subtask>
+        <subtask>Configure CORS middleware for localhost:3000</subtask>
+        <subtask>Add /health endpoint returning {"status": "ok"}</subtask>
+        <subtask>Mount API router at /api/v1</subtask>
+        <subtask>Create backend/app/api/v1/router.py</subtask>
+      </task>
+      <task id="6" title="Create base model and schemas" acs="3">
+        <subtask>Create backend/app/models/base.py with Base and BaseModel</subtask>
+        <subtask>Create backend/app/schemas/base.py with response envelope schemas</subtask>
+      </task>
+      <task id="7" title="Configure database session" acs="3">
+        <subtask>Create backend/app/db/session.py with async engine and sessionmaker</subtask>
+        <subtask>Define get_db() dependency</subtask>
+      </task>
+      <task id="8" title="Configure Alembic for migrations" acs="4">
+        <subtask>Run alembic init alembic</subtask>
+        <subtask>Update alembic.ini and env.py for async support</subtask>
+        <subtask>Create initial migration</subtask>
+      </task>
+      <task id="9" title="Create backend Dockerfile" acs="8">
+        <subtask>Create Dockerfile with python:3.12-slim base</subtask>
+        <subtask>Multi-stage build with development and production targets</subtask>
+        <subtask>Update docker-compose.dev.yml backend service</subtask>
+      </task>
+      <task id="10" title="Verification testing" acs="1-10">
+        <subtask>Verify Python 3.12+ in venv</subtask>
+        <subtask>Verify all packages installed</subtask>
+        <subtask>Verify directory structure</subtask>
+        <subtask>Test server start, /health, /docs endpoints</subtask>
+        <subtask>Verify JSON logging output</subtask>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">Python 3.12+ virtual environment is configured in /backend</criterion>
+    <criterion id="AC2">FastAPI 0.115.x with uvicorn is installed and configured</criterion>
+    <criterion id="AC3">SQLAlchemy 2.x with asyncpg driver is installed</criterion>
+    <criterion id="AC4">Alembic is configured for database migrations</criterion>
+    <criterion id="AC5">Pydantic-settings is configured for environment-based configuration</criterion>
+    <criterion id="AC6">structlog is configured for JSON logging</criterion>
+    <criterion id="AC7">Directory structure matches Architecture spec: app/api/, app/models/, app/schemas/, app/services/, app/core/</criterion>
+    <criterion id="AC8">Running uvicorn app.main:app --reload starts the server on port 8000</criterion>
+    <criterion id="AC9">/health endpoint returns {"status": "ok"} with HTTP 200</criterion>
+    <criterion id="AC10">/docs shows OpenAPI documentation</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="System Architecture" section="Decision Summary" snippet="Backend Framework: FastAPI 0.115.x with uvicorn. Async-native, auto OpenAPI docs, Python ecosystem for AI." />
+      <doc path="docs/architecture.md" title="System Architecture" section="Project Structure" snippet="Defines backend/ directory structure with app/core/, app/api/, app/models/, app/schemas/, app/services/, app/db/, app/agents/, app/workers/, alembic/, tests/" />
+      <doc path="docs/architecture.md" title="System Architecture" section="Technology Stack Details" snippet="Python 3.12+, FastAPI 0.115.x, SQLAlchemy 2.x async sessions, Alembic latest, pydantic-settings 2.6.x, structlog 24.x, redis 5.x, arq 0.26.x" />
+      <doc path="docs/architecture.md" title="System Architecture" section="Response Envelope" snippet="Success single: {data, meta}. Success list: {data[], meta with total/limit/offset}. Error: {error: {code, message, details}}" />
+      <doc path="docs/architecture.md" title="System Architecture" section="Logging Strategy" snippet="Structured JSON via structlog. Required context: request_id, user_id, assessment_id, node" />
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic 1 Tech Spec" section="Data Models" snippet="BaseModel pattern with id (UUID), created_at, updated_at, deleted_at for soft delete" />
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic 1 Tech Spec" section="APIs and Interfaces" snippet="GET /health returns {status: ok}. GET /docs returns OpenAPI UI. FastAPI app entry in app/main.py" />
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic 1 Tech Spec" section="Environment Variables" snippet="DATABASE_URL, REDIS_URL, MINIO_URL, OPENAI_API_KEY, JWT_SECRET, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES" />
+      <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.2" snippet="Setup Backend Foundation - FastAPI 0.115.x, SQLAlchemy 2.x, Alembic, pydantic-settings, structlog, uvicorn" />
+    </docs>
+    <code>
+      <file path="docker-compose.yml" kind="config" symbol="backend service" lines="56-80" reason="Defines backend container configuration, environment variables, ports, and dependencies on postgres/redis/minio" />
+      <file path="docker-compose.dev.yml" kind="config" symbol="backend service" lines="18-32" reason="Development overrides with volume mounts, debug settings, and uvicorn --reload command. Expects Dockerfile target 'development'" />
+      <file path=".env.example" kind="config" symbol="environment template" lines="1-69" reason="Complete environment variable template with DATABASE_URL, REDIS_URL, MINIO_URL, JWT settings. Backend must read these via pydantic-settings" />
+      <file path="backend/" kind="directory" symbol="empty placeholder" reason="Empty directory created in Story 1.1. This story populates it with FastAPI application structure" />
+    </code>
+    <dependencies>
+      <python>
+        <package name="fastapi" version="0.115.6" purpose="Web framework" />
+        <package name="uvicorn[standard]" version="0.32.1" purpose="ASGI server" />
+        <package name="sqlalchemy[asyncio]" version="2.0.36" purpose="ORM with async support" />
+        <package name="asyncpg" version="0.30.0" purpose="PostgreSQL async driver" />
+        <package name="alembic" version="1.14.0" purpose="Database migrations" />
+        <package name="pydantic-settings" version="2.6.1" purpose="Configuration management" />
+        <package name="structlog" version="24.4.0" purpose="Structured logging" />
+        <package name="redis" version="5.2.0" purpose="Redis client" />
+        <package name="arq" version="0.26.1" purpose="Async job queue" />
+        <package name="python-jose[cryptography]" version="3.3.0" purpose="JWT handling" />
+        <package name="passlib[argon2]" version="1.7.4" purpose="Password hashing" />
+      </python>
+      <python-dev>
+        <package name="pytest" version="8.3.4" purpose="Testing framework" />
+        <package name="pytest-asyncio" version="0.24.0" purpose="Async test support" />
+        <package name="black" version="24.10.0" purpose="Code formatter" />
+        <package name="ruff" version="0.8.2" purpose="Linter" />
+        <package name="mypy" version="1.13.0" purpose="Type checker" />
+        <package name="httpx" version="0.28.1" purpose="Test client" />
+      </python-dev>
+      <docker>
+        <image name="python" version="3.12-slim" purpose="Backend runtime" />
+        <image name="pgvector/pgvector" version="pg16" purpose="PostgreSQL with vectors" />
+        <image name="redis" version="7-alpine" purpose="Cache and queue" />
+        <image name="minio/minio" version="RELEASE.2024-11" purpose="Object storage" />
+      </docker>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="Architecture">All database operations must use async patterns (asyncpg, async sessions)</constraint>
+    <constraint source="Architecture">Response envelope pattern: {data, meta} for success, {error} for errors</constraint>
+    <constraint source="Architecture">Use snake_case for Python files, classes, functions, DB tables/columns</constraint>
+    <constraint source="Architecture">API endpoints use kebab-case, plural nouns</constraint>
+    <constraint source="Architecture">Soft delete pattern with deleted_at column on all tables</constraint>
+    <constraint source="Architecture">CORS must allow localhost:3000 for frontend</constraint>
+    <constraint source="Tech Spec">BaseModel must include: id (UUID), created_at, updated_at, deleted_at</constraint>
+    <constraint source="Story 1.1">docker-compose.dev.yml expects Dockerfile target 'development' - must be implemented</constraint>
+    <constraint source="Story 1.1">/backend directory exists as empty placeholder - populate with application structure</constraint>
+    <constraint source="Architecture">Connection pool size: 20 connections for asyncpg</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface name="/health" kind="REST endpoint">
+      <method>GET</method>
+      <response>{"status": "ok"}</response>
+      <statusCode>200</statusCode>
+      <path>app/main.py</path>
+    </interface>
+    <interface name="/docs" kind="REST endpoint">
+      <method>GET</method>
+      <response>OpenAPI Swagger UI</response>
+      <statusCode>200</statusCode>
+      <path>app/main.py (FastAPI auto-generated)</path>
+    </interface>
+    <interface name="/openapi.json" kind="REST endpoint">
+      <method>GET</method>
+      <response>OpenAPI JSON specification</response>
+      <statusCode>200</statusCode>
+      <path>app/main.py (FastAPI auto-generated)</path>
+    </interface>
+    <interface name="get_db()" kind="FastAPI dependency">
+      <signature>async def get_db() -> AsyncGenerator[AsyncSession, None]</signature>
+      <purpose>Provides async database session for request lifecycle</purpose>
+      <path>app/db/session.py</path>
+    </interface>
+    <interface name="Settings" kind="Pydantic BaseSettings">
+      <fields>DATABASE_URL, REDIS_URL, MINIO_URL, OPENAI_API_KEY, JWT_SECRET, JWT_ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, LOG_LEVEL</fields>
+      <purpose>Type-safe configuration from environment variables</purpose>
+      <path>app/core/config.py</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Backend testing uses pytest with pytest-asyncio for async support. Tests should verify endpoint responses, configuration loading, and database connectivity. Use httpx.AsyncClient as test client. Follow AAA pattern (Arrange-Act-Assert). Mock external dependencies (database, redis) for unit tests. Integration tests run against actual containers.
+    </standards>
+    <locations>
+      <location>backend/tests/</location>
+      <location>backend/tests/test_main.py (health endpoint tests)</location>
+      <location>backend/tests/test_config.py (settings validation)</location>
+      <location>backend/tests/conftest.py (fixtures)</location>
+    </locations>
+    <ideas>
+      <idea acRef="AC1">Test that Python version >= 3.12 in virtual environment</idea>
+      <idea acRef="AC2">Test that FastAPI app imports successfully without errors</idea>
+      <idea acRef="AC3">Test that SQLAlchemy engine creates with asyncpg driver</idea>
+      <idea acRef="AC4">Test that alembic can read config and connect (integration)</idea>
+      <idea acRef="AC5">Test Settings class loads from env vars and .env file</idea>
+      <idea acRef="AC6">Test structlog outputs valid JSON format</idea>
+      <idea acRef="AC7">Test all expected directories exist with __init__.py files</idea>
+      <idea acRef="AC8">Test uvicorn starts without errors (smoke test)</idea>
+      <idea acRef="AC9">Test GET /health returns 200 with {"status": "ok"}</idea>
+      <idea acRef="AC10">Test GET /docs returns 200 with HTML content</idea>
+    </ideas>
+  </tests>
+</story-context>

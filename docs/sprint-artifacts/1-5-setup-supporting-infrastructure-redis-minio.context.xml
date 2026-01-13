@@ -1,0 +1,175 @@
+<story-context id="1-5" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>5</storyId>
+    <title>Setup Supporting Infrastructure (Redis + MinIO)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-5-setup-supporting-infrastructure-redis-minio.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>Redis and MinIO running in Docker</iWant>
+    <soThat>I have caching, job queue, and file storage available</soThat>
+    <tasks>
+      <task id="1" ac="1,2,3,10">Add Redis service to docker-compose.yml</task>
+      <task id="2" ac="4,5,6,7,10">Add MinIO service to docker-compose.yml</task>
+      <task id="3" ac="8">Install Redis dependencies in backend</task>
+      <task id="4" ac="8">Create Redis configuration module (redis.py)</task>
+      <task id="5" ac="9">Install MinIO/S3 dependencies in backend (aioboto3, boto3)</task>
+      <task id="6" ac="9">Create MinIO/S3 configuration module (storage.py)</task>
+      <task id="7" ac="8,9">Update environment configuration</task>
+      <task id="8" ac="1-10">Verification testing</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <ac id="1">Redis 7.x container starts via `docker compose up redis`</ac>
+    <ac id="2">Redis accepts connections on port 6379</ac>
+    <ac id="3">Redis persistent volume configured for data</ac>
+    <ac id="4">MinIO container starts via `docker compose up minio`</ac>
+    <ac id="5">MinIO API accessible on port 9000</ac>
+    <ac id="6">MinIO Console accessible on port 9001</ac>
+    <ac id="7">MinIO persistent volume configured for data</ac>
+    <ac id="8">Backend can connect to Redis and perform basic operations (set/get)</ac>
+    <ac id="9">Backend can upload and download files from MinIO</ac>
+    <ac id="10">Health checks configured for both containers</ac>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="Architecture" section="Decision Summary">
+        Redis 7.x for session cache, rate limiting, ARQ job queue. MinIO for S3-compatible file storage. ARQ 0.26.x backed by Redis.
+      </doc>
+      <doc path="docs/architecture.md" title="Architecture" section="Docker Compose Stack">
+        Defines services: postgres, redis, minio, backend, frontend, worker with volumes and health checks.
+      </doc>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Tech Spec Epic 1" section="AC9-AC10">
+        AC9: Redis container runs with docker compose. AC10: MinIO container runs with Console accessible.
+      </doc>
+      <doc path="docs/epics.md" title="Epics" section="Story 1.5">
+        Story definition with acceptance criteria for Redis and MinIO infrastructure setup.
+      </doc>
+    </docs>
+
+    <code>
+      <file path="docker-compose.yml" kind="infrastructure" reason="ALREADY HAS Redis and MinIO services - Tasks 1-2 mostly complete">
+        <status>EXISTS - Redis service on port 6379, MinIO on 9000/9001, volumes configured, health checks present</status>
+        <note>Review and verify configuration matches story requirements</note>
+      </file>
+      <file path="backend/app/core/config.py" kind="configuration" reason="ALREADY HAS Redis and MinIO settings - Task 7 partially complete">
+        <status>EXISTS - REDIS_URL, MINIO_URL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY defined</status>
+        <note>Missing MINIO_BUCKET_NAME setting - add this</note>
+      </file>
+      <file path="backend/requirements.txt" kind="dependencies" reason="PARTIAL - Has redis, missing aioboto3/boto3">
+        <status>PARTIAL - Has redis==5.2.0 and arq==0.26.1</status>
+        <note>Add aioboto3>=13.0.0 and boto3>=1.35.0 for MinIO S3 support</note>
+      </file>
+      <file path="backend/app/core/database.py" kind="module" reason="Pattern reference for async client implementation">
+        <status>EXISTS - Provides async pattern for get_db() dependency</status>
+        <note>Use same async generator pattern for redis.py and storage.py</note>
+      </file>
+      <file path=".env.example" kind="configuration" reason="ALREADY HAS all Redis and MinIO environment variables">
+        <status>EXISTS - REDIS_URL, MINIO_URL, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_USER, MINIO_PASSWORD configured</status>
+        <note>May need MINIO_BUCKET_NAME variable</note>
+      </file>
+      <file path="backend/app/core/redis.py" kind="module" reason="TO BE CREATED - Redis client module">
+        <status>MISSING</status>
+        <note>Create async Redis client with connection pool and get_redis() dependency</note>
+      </file>
+      <file path="backend/app/core/storage.py" kind="module" reason="TO BE CREATED - MinIO/S3 storage module">
+        <status>MISSING</status>
+        <note>Create async S3 client with upload_file, download_file, delete_file, get_presigned_url functions</note>
+      </file>
+    </code>
+
+    <dependencies>
+      <python>
+        <package name="fastapi" version="0.115.6" />
+        <package name="uvicorn" version="0.32.1" />
+        <package name="sqlalchemy" version="2.0.36" />
+        <package name="asyncpg" version="0.30.0" />
+        <package name="alembic" version="1.14.0" />
+        <package name="pydantic-settings" version="2.6.1" />
+        <package name="structlog" version="24.4.0" />
+        <package name="redis" version="5.2.0" installed="true" />
+        <package name="arq" version="0.26.1" installed="true" />
+        <package name="aioboto3" version=">=13.0.0" installed="false" required="true" />
+        <package name="boto3" version=">=1.35.0" installed="false" required="true" />
+      </python>
+      <docker>
+        <image name="redis:7-alpine" purpose="Redis cache and job queue" />
+        <image name="minio/minio:RELEASE.2024-11-07T00-52-20Z" purpose="S3-compatible object storage" />
+      </docker>
+    </dependencies>
+  </artifacts>
+
+  <interfaces>
+    <interface name="get_db" kind="FastAPI Dependency" path="backend/app/core/database.py">
+      <signature>async def get_db() -> AsyncGenerator[AsyncSession, None]</signature>
+      <note>Pattern to follow for get_redis() and get_s3_client()</note>
+    </interface>
+    <interface name="settings" kind="Configuration" path="backend/app/core/config.py">
+      <signature>settings = get_settings() -> Settings</signature>
+      <note>Access via settings.REDIS_URL, settings.MINIO_URL, etc.</note>
+    </interface>
+    <interface name="Redis Client" kind="To Be Created" path="backend/app/core/redis.py">
+      <signature>async def get_redis() -> AsyncGenerator[Redis, None]</signature>
+    </interface>
+    <interface name="S3 Client" kind="To Be Created" path="backend/app/core/storage.py">
+      <signature>async def get_s3_client() -> AsyncGenerator[S3Client, None]</signature>
+      <signature>async def upload_file(client, bucket, key, data) -> str</signature>
+      <signature>async def download_file(client, bucket, key) -> bytes</signature>
+      <signature>async def delete_file(client, bucket, key) -> None</signature>
+      <signature>async def get_presigned_url(client, bucket, key, expires) -> str</signature>
+    </interface>
+  </interfaces>
+
+  <constraints>
+    <constraint type="async">All client code must use async patterns (redis.asyncio, aioboto3)</constraint>
+    <constraint type="dependency-injection">Use FastAPI Depends() for client injection</constraint>
+    <constraint type="config">All URLs/credentials from pydantic-settings, not hardcoded</constraint>
+    <constraint type="health-check">Docker services must have health checks configured</constraint>
+    <constraint type="volume">Data must persist via named Docker volumes</constraint>
+    <constraint type="pattern">Follow existing patterns in database.py for async generator dependencies</constraint>
+  </constraints>
+
+  <tests>
+    <standards>
+      No test framework installed yet. Tests directory exists at backend/tests/.
+      For this infrastructure story, verification is manual via docker commands and Python scripts.
+    </standards>
+    <locations>
+      <location>backend/tests/</location>
+    </locations>
+    <ideas>
+      <idea ac="1,2,3">Verify Redis container starts: `sudo docker compose up redis -d` then `redis-cli ping`</idea>
+      <idea ac="4,5,6,7">Verify MinIO container starts: `sudo docker compose up minio -d` then access http://localhost:9001</idea>
+      <idea ac="8">Test Redis from Python: create redis.py, run set/get operations</idea>
+      <idea ac="9">Test MinIO from Python: create storage.py, upload/download test file</idea>
+      <idea ac="10">Verify health checks: `docker ps` shows healthy status for both services</idea>
+    </ideas>
+  </tests>
+
+  <implementationNotes>
+    <note priority="high">
+      SIGNIFICANT WORK ALREADY DONE: docker-compose.yml has Redis and MinIO services fully configured.
+      config.py has settings. requirements.txt has redis package. .env.example has variables.
+    </note>
+    <note priority="high">
+      REMAINING WORK:
+      1. Add aioboto3 and boto3 to requirements.txt
+      2. Add MINIO_BUCKET_NAME to config.py
+      3. Create backend/app/core/redis.py with async client
+      4. Create backend/app/core/storage.py with S3 functions
+      5. Verify containers start and pass health checks
+      6. Test Redis set/get from backend
+      7. Test MinIO upload/download from backend
+    </note>
+    <note priority="medium">
+      Follow database.py pattern: async generator with try/except/finally for proper cleanup.
+    </note>
+  </implementationNotes>
+</story-context>

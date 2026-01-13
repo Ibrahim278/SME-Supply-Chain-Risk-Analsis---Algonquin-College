@@ -1,0 +1,200 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1</storyId>
+    <title>Initialize Monorepo Structure</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-28</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-1-initialize-monorepo-structure.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>a well-organized monorepo with frontend and backend directories</iWant>
+    <soThat>I can navigate the codebase efficiently and both systems can evolve independently</soThat>
+    <tasks>
+      <task id="1" acs="1,2">
+        <name>Create root project structure</name>
+        <subtasks>
+          <subtask>Create /frontend directory</subtask>
+          <subtask>Create /backend directory</subtask>
+          <subtask>Verify directory structure matches Architecture doc layout</subtask>
+        </subtasks>
+      </task>
+      <task id="2" acs="3,4">
+        <name>Create Docker Compose files</name>
+        <subtasks>
+          <subtask>Create docker-compose.yml with services: frontend, backend, worker, postgres, redis, minio</subtask>
+          <subtask>Configure service dependencies and startup order: postgres, redis, minio, backend, frontend, worker</subtask>
+          <subtask>Add named volumes: postgres_data, redis_data, minio_data</subtask>
+          <subtask>Create docker-compose.dev.yml with development overrides</subtask>
+          <subtask>Test: docker compose config validates both files</subtask>
+        </subtasks>
+      </task>
+      <task id="3" acs="5">
+        <name>Create environment template</name>
+        <subtasks>
+          <subtask>Create .env.example with all required variables</subtask>
+          <subtask>Add descriptive comments for each variable</subtask>
+        </subtasks>
+      </task>
+      <task id="4" acs="6">
+        <name>Create README with setup instructions</name>
+        <subtasks>
+          <subtask>Document prerequisites: Python 3.12+, Node.js 20 LTS, Docker, Git</subtask>
+          <subtask>Document setup steps per Architecture Development Environment section</subtask>
+          <subtask>Include quick start commands</subtask>
+          <subtask>Add troubleshooting section</subtask>
+        </subtasks>
+      </task>
+      <task id="5" acs="7">
+        <name>Create .gitignore</name>
+        <subtasks>
+          <subtask>Add Python patterns: venv/, __pycache__/, *.pyc, .mypy_cache/</subtask>
+          <subtask>Add Node patterns: node_modules/, .next/, .turbo/</subtask>
+          <subtask>Add environment patterns: .env, .env.local</subtask>
+          <subtask>Add IDE patterns: .idea/, .vscode/</subtask>
+          <subtask>Add OS patterns: .DS_Store, Thumbs.db</subtask>
+        </subtasks>
+      </task>
+      <task id="6" acs="1,2,3,4,5,6,7">
+        <name>Verification testing</name>
+        <subtasks>
+          <subtask>Verify all directories exist</subtask>
+          <subtask>Verify docker compose config passes</subtask>
+          <subtask>Verify .env.example contains all variables</subtask>
+          <subtask>Verify .gitignore covers all patterns</subtask>
+        </subtasks>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">/frontend directory exists with Next.js application placeholder structure</criterion>
+    <criterion id="AC2">/backend directory exists with FastAPI application placeholder structure</criterion>
+    <criterion id="AC3">/docker-compose.yml exists with full production stack definition</criterion>
+    <criterion id="AC4">/docker-compose.dev.yml exists with development overrides</criterion>
+    <criterion id="AC5">/.env.example exists with all required environment variables documented</criterion>
+    <criterion id="AC6">/README.md exists with setup instructions that can be followed to run the system</criterion>
+    <criterion id="AC7">/.gitignore excludes: node_modules/, venv/, .env, __pycache__/, .next/, *.pyc, .mypy_cache/</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Project Structure</section>
+        <snippet>Defines the monorepo layout with frontend/ and backend/ directories, including full directory tree structure for both applications.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Deployment Architecture</section>
+        <snippet>Docker Compose stack definition with services: frontend, backend, worker, postgres (pgvector/pgvector:pg16), redis (redis:7-alpine), minio (minio/minio).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Document</title>
+        <section>Development Environment</section>
+        <snippet>Setup commands, environment variables, prerequisites (Python 3.12+, Node.js 20 LTS, Docker). Full .env example with DATABASE_URL, REDIS_URL, MINIO settings, JWT config.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Directory Structure</section>
+        <snippet>Detailed directory tree including frontend/src/app/, backend/app/api/, backend/alembic/, Docker files at root level.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Acceptance Criteria (Authoritative)</section>
+        <snippet>AC1: Monorepo structure exists. AC14: .env.example complete. AC15: README setup works. AC16: .gitignore complete.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.1: Initialize Monorepo Structure</section>
+        <snippet>Prerequisites: None (first story). Technical Notes: Follow Architecture doc Project Structure, use kebab-case for directories.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <!-- GREENFIELD PROJECT: No existing source code -->
+      <note>This is Story 1.1 - the first story creating the initial project structure. No existing code artifacts to reference.</note>
+    </code>
+
+    <dependencies>
+      <!-- Dependencies will be added in subsequent stories -->
+      <note>Story 1.1 creates the project skeleton. Dependency manifests (package.json, requirements.txt) will be created in Stories 1.2 and 1.3.</note>
+      <planned>
+        <backend>
+          <package name="fastapi" version="0.115.x" />
+          <package name="uvicorn" version="0.32.x" />
+          <package name="sqlalchemy" version="2.0.x" />
+          <package name="asyncpg" version="0.30.x" />
+          <package name="alembic" version="1.14.x" />
+          <package name="pydantic-settings" version="2.6.x" />
+          <package name="structlog" version="24.x" />
+          <package name="redis" version="5.x" />
+          <package name="arq" version="0.26.x" />
+        </backend>
+        <frontend>
+          <package name="next" version="15.0.3" />
+          <package name="react" version="19.x" />
+          <package name="typescript" version="5.x" />
+          <package name="tailwindcss" version="3.4.x" />
+        </frontend>
+        <docker>
+          <image name="pgvector/pgvector" tag="pg16" />
+          <image name="redis" tag="7-alpine" />
+          <image name="minio/minio" tag="RELEASE.2024-11" />
+          <image name="python" tag="3.12-slim" />
+          <image name="node" tag="20-alpine" />
+        </docker>
+      </planned>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="structure">Project structure MUST match Architecture doc "Project Structure" section exactly</constraint>
+    <constraint type="docker">Docker images MUST use specific versions: pgvector/pgvector:pg16, redis:7-alpine, minio/minio:RELEASE.2024-11</constraint>
+    <constraint type="compose">Production compose (docker-compose.yml) defines full stack; dev compose extends with development-friendly settings</constraint>
+    <constraint type="naming">Use kebab-case for directories</constraint>
+    <constraint type="env">All environment variables from Architecture "Environment Variables" section must be in .env.example</constraint>
+    <constraint type="gitignore">Must exclude: node_modules/, venv/, .env, __pycache__/, .next/, *.pyc, .mypy_cache/</constraint>
+  </constraints>
+
+  <interfaces>
+    <!-- No interfaces yet - this is foundational infrastructure story -->
+    <note>Story 1.1 creates project skeleton. API interfaces defined in Story 1.2 (Backend) and used in subsequent stories.</note>
+    <planned>
+      <interface name="Health Check" kind="REST endpoint">
+        <signature>GET /health returns {"status": "ok"}</signature>
+        <story>1.2</story>
+      </interface>
+      <interface name="OpenAPI Docs" kind="REST endpoint">
+        <signature>GET /docs renders Swagger UI</signature>
+        <story>1.2</story>
+      </interface>
+    </planned>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Per Architecture doc: Backend uses pytest with pytest-asyncio for async test support. Frontend uses Jest (to be configured in Story 1.3). Integration tests verify Docker container connectivity. Smoke tests cover end-to-end startup verification.
+    </standards>
+    <locations>
+      <location>backend/tests/</location>
+      <location>frontend/__tests__/ (or src/**/*.test.tsx)</location>
+    </locations>
+    <ideas>
+      <idea ac="AC1,AC2">Manual inspection: Verify /frontend and /backend directories exist with correct subdirectory structure</idea>
+      <idea ac="AC3,AC4">Run "docker compose config" on both compose files - should exit 0 with valid YAML</idea>
+      <idea ac="AC5">Script check: Parse .env.example and verify all required variables from Architecture doc are present</idea>
+      <idea ac="AC6">Manual test: Fresh clone, follow README instructions, verify all services start</idea>
+      <idea ac="AC7">Git status check: After npm install and pip install, verify excluded files don't appear in git status</idea>
+    </ideas>
+  </tests>
+</story-context>

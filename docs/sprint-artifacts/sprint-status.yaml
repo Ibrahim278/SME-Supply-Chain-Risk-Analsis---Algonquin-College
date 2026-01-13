@@ -1,0 +1,119 @@
+# generated: 2025-11-28
+# project: SME Supply Chain Risk Analysis
+# project_key: sme-scra
+# tracking_system: file-system
+# story_location: '{project-root}/docs/sprint-artifacts'
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic exists in epic file but not contexted
+#   - contexted: Epic tech context created by *create-epic-tech-context (required before drafting stories)
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder by *create-story
+#   - ready-for-dev: Draft approved and story context created by *story-ready
+#   - in-progress: Developer actively working on implementation by *dev-story
+#   - review: Implementation complete, ready for review by *code-review
+#   - done: Story completed by *story-done
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done by *retrospective
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics should be 'contexted' before stories can be 'drafted'
+# - SM typically drafts next story ONLY after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', dev reviews, then Dev moves to 'done'
+
+generated: 2025-11-28
+project: SME Supply Chain Risk Analysis
+project_key: sme-scra
+tracking_system: file-system
+story_location: "{project-root}/docs/sprint-artifacts"
+
+development_status:
+  # Epic 1: Foundation & Project Setup (7 stories)
+  epic-1: contexted
+  1-1-initialize-monorepo-structure: done
+  1-2-setup-backend-foundation-fastapi: done
+  1-3-setup-frontend-foundation-nextjs-shadcn-ui: done
+  1-4-setup-database-infrastructure: done
+  1-5-setup-supporting-infrastructure-redis-minio: done
+  1-6-configure-development-environment: done
+  1-7-setup-fully-dockerized-development-environment: done  # Fixed: 2025-12-01 - Installed vitest+RTL, 6 tests passing, all 12 ACs verified
+  1-8-hotfix-upgrade-react-nextjs-stable-versions: done  # Approved: 2025-11-30 - All ACs verified
+  1-9-migrate-tailwind-css-v4: done  # Approved: 2025-11-30 - All ACs verified, Senior Dev Review passed
+  epic-1-retrospective: optional
+
+  # Epic 2: User Authentication & Access (9 stories)
+  epic-2: backlog
+  2-0-setup-playwright-e2e-testing-infrastructure: backlog  # Added: 2025-12-01 - Tech debt from Epic 1
+  2-1-implement-user-data-model-and-migrations: backlog
+  2-2-implement-password-hashing-and-jwt-authentication: backlog
+  2-3-implement-login-endpoint: backlog
+  2-4-implement-frontend-login-page: backlog
+  2-5-implement-password-reset-flow: backlog
+  2-6-implement-user-profile-management: backlog
+  2-7-implement-admin-user-management: backlog
+  2-8-implement-role-based-access-control: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: Supplier Submission & Status Tracking (7 stories)
+  epic-3: backlog
+  3-1-implement-supplier-and-assessment-data-models: backlog
+  3-2-implement-supplier-submission-api: backlog
+  3-3-implement-arq-worker-and-job-queue: backlog
+  3-4-implement-real-time-status-updates-via-sse: backlog
+  3-5-implement-supplier-submission-wizard-ui: backlog
+  3-6-implement-assessment-status-tracking-ui: backlog
+  3-7-implement-graceful-degradation-and-partial-results: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Admin Risk Framework Configuration (6 stories)
+  epic-4: backlog
+  4-1-implement-risk-framework-data-model: backlog
+  4-2-implement-risk-framework-api: backlog
+  4-3-implement-risk-categories-management-ui: backlog
+  4-4-implement-scoring-configuration-ui: backlog
+  4-5-implement-red-flag-configuration-ui: backlog
+  4-6-implement-framework-preview-and-activation: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Admin Data Source & Country Management (8 stories)
+  epic-5: backlog
+  5-1-implement-data-source-and-country-data-models: backlog
+  5-2-implement-data-source-management-api: backlog
+  5-3-implement-data-source-connectivity-test: backlog
+  5-4-implement-file-upload-for-data-sources: backlog
+  5-5-implement-data-source-management-ui: backlog
+  5-6-implement-country-management-api-and-ui: backlog
+  5-7-implement-ai-assisted-data-source-discovery: backlog
+  5-8-implement-discovery-feedback-loop: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Agentic Assessment Pipeline (7 stories)
+  epic-6: backlog
+  6-1-implement-langgraph-workflow-foundation: backlog
+  6-2-implement-evidence-data-model: backlog
+  6-3-implement-data-collection-node-core-framework: backlog
+  6-4-implement-data-collection-tools: backlog
+  6-5-implement-evidence-analysis-node: backlog
+  6-6-implement-risk-assessment-node: backlog
+  6-7-integrate-workflow-with-arq-worker: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Results & Reporting (9 stories)
+  epic-7: backlog
+  7-1-implement-report-generation-node: backlog
+  7-2-implement-assessment-results-api: backlog
+  7-3-implement-assessment-results-ui: backlog
+  7-4-implement-recommendations-display: backlog
+  7-5-implement-questionnaire-generation: backlog
+  7-6-implement-assessment-list-and-search: backlog
+  7-7-implement-report-export-pdf: backlog
+  7-8-implement-report-export-csv: backlog
+  7-9-implement-assessment-deletion: backlog
+  epic-7-retrospective: optional

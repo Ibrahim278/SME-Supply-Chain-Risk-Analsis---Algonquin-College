@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Generated files
+*.generated.ts
+src/lib/api/schema.d.ts
+
+# Package files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Static assets
+public/

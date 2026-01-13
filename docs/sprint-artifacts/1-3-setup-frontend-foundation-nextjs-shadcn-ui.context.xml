@@ -1,0 +1,205 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>3</storyId>
+    <title>Setup Frontend Foundation (Next.js + shadcn/ui)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-3-setup-frontend-foundation-nextjs-shadcn-ui.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>a configured Next.js frontend with shadcn/ui components</iWant>
+    <soThat>I can build UI screens following the UX design system</soThat>
+    <tasks>
+      <task id="1" acs="1,2,5">Initialize Next.js application
+        <subtask>Run npx create-next-app@15.0.3 frontend --typescript --tailwind --eslint --app --src-dir</subtask>
+        <subtask>Verify TypeScript strict mode in tsconfig.json</subtask>
+        <subtask>Verify directory structure: src/app/layout.tsx, src/app/page.tsx</subtask>
+        <subtask>Create additional directories: src/components/, src/lib/, src/hooks/, src/stores/</subtask>
+        <subtask>Add placeholder files in each new directory</subtask>
+      </task>
+      <task id="2" acs="3,8">Configure Tailwind with UX color palette
+        <subtask>Update tailwind.config.ts with primary colors (#6366f1 Indigo)</subtask>
+        <subtask>Configure slate neutrals for backgrounds</subtask>
+        <subtask>Verify Tailwind classes compile correctly</subtask>
+      </task>
+      <task id="3" acs="4">Initialize shadcn/ui
+        <subtask>Run npx shadcn@2.1.6 init with Style:Default, Base:Slate, CSS vars:Yes</subtask>
+        <subtask>Install core components: button, card, input, form, table, dialog, toast, badge, tabs</subtask>
+        <subtask>Verify components import without errors</subtask>
+      </task>
+      <task id="4" acs="7">Create styled home page
+        <subtask>Update src/app/page.tsx with SME title, Button and Card components</subtask>
+        <subtask>Apply primary Indigo color and basic responsive layout</subtask>
+      </task>
+      <task id="5" acs="6">Configure development server
+        <subtask>Verify npm run dev starts on port 3000</subtask>
+        <subtask>Test hot reload functionality</subtask>
+        <subtask>Add .env.example with NEXT_PUBLIC_API_URL, NEXTAUTH_URL, NEXTAUTH_SECRET</subtask>
+      </task>
+      <task id="6" acs="9,10">Create frontend Dockerfile
+        <subtask>Create frontend/Dockerfile with node:20-slim base, multi-stage build</subtask>
+        <subtask>Development target with hot reload, production target with optimized build</subtask>
+        <subtask>Update docker-compose.dev.yml frontend service</subtask>
+        <subtask>Verify docker compose build and run succeed</subtask>
+      </task>
+      <task id="7" acs="4">Install additional dependencies
+        <subtask>Install zustand@5 for state management</subtask>
+        <subtask>Install @tanstack/react-query@5 for server state</subtask>
+        <subtask>Install react-hook-form, zod, @hookform/resolvers for forms</subtask>
+        <subtask>Install openapi-typescript@7 (devDep) for API client generation</subtask>
+      </task>
+      <task id="8" acs="1-10">Verification testing
+        <subtask>Verify Next.js 15.x: npm list next</subtask>
+        <subtask>Verify TypeScript strict mode</subtask>
+        <subtask>Verify shadcn/ui components render</subtask>
+        <subtask>Test home page at localhost:3000</subtask>
+        <subtask>Docker build and container run successfully</subtask>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">Next.js 15.x with App Router is initialized in /frontend</criterion>
+    <criterion id="AC2">TypeScript is configured in strict mode</criterion>
+    <criterion id="AC3">Tailwind CSS is configured with custom color tokens (Warm Indigo theme per UX spec)</criterion>
+    <criterion id="AC4">shadcn/ui is initialized with core components installed</criterion>
+    <criterion id="AC5">Directory structure matches Architecture spec: src/app/, src/components/, src/lib/, src/hooks/, src/stores/</criterion>
+    <criterion id="AC6">Running npm run dev starts the development server on port 3000</criterion>
+    <criterion id="AC7">The home page renders with shadcn/ui styling applied</criterion>
+    <criterion id="AC8">Tailwind config includes UX color palette: Primary #6366f1, Success #22c55e, Warning #f59e0b, Error #ef4444</criterion>
+    <criterion id="AC9">Frontend Dockerfile exists with development and production targets</criterion>
+    <criterion id="AC10">docker-compose.dev.yml frontend service builds and runs successfully</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Project Structure, Frontend Setup, Decision Summary</section>
+        <snippet>Frontend Framework: Next.js + React 15.0.3 with App Router, shadcn/ui + Tailwind 2.1.6/3.4.x. Init command: npx create-next-app@15.0.3 frontend --typescript --tailwind --eslint --app --src-dir. Additional setup: shadcn/ui components, API client (openapi-typescript), state management (Zustand, React Query), auth (NextAuth.js).</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Color System, Design System Choice</section>
+        <snippet>Theme: Warm Indigo. Primary #6366f1, Primary Dark #4f46e5, Primary Light #818cf8, Primary Subtle #e0e7ff. Success #22c55e, Warning #f59e0b, Error #ef4444. Neutral scale: Slate (slate-50 through slate-900). Design system: shadcn/ui (accessible, customizable, Tailwind-based).</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.3: Setup Frontend Foundation</section>
+        <snippet>Init via npx create-next-app@latest with --typescript --tailwind --eslint --app --src-dir flags. Install shadcn/ui core components: Button, Card, Input, Form, Table, Dialog, Toast, Badge, Tabs. Configure Warm Indigo theme colors per UX spec.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/1-2-setup-backend-foundation-fastapi.md</path>
+        <title>Story 1.2 Completion Notes</title>
+        <section>Learnings from Previous Story</section>
+        <snippet>Frontend directory created as empty placeholder (/frontend). docker-compose.dev.yml has frontend service defined expecting Dockerfile with development target. .env.example contains NEXT_PUBLIC_API_URL, NEXTAUTH_URL, NEXTAUTH_SECRET placeholders. Follow same multi-stage Dockerfile pattern as backend.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <file>
+        <path>docker-compose.dev.yml</path>
+        <kind>config</kind>
+        <symbol>frontend service</symbol>
+        <lines>34-47</lines>
+        <reason>Defines frontend Docker service configuration expecting Dockerfile with development target, port 3000, npm run dev command</reason>
+      </file>
+      <file>
+        <path>.env.example</path>
+        <kind>config</kind>
+        <symbol>Frontend environment variables</symbol>
+        <lines>62-68</lines>
+        <reason>Contains NEXT_PUBLIC_API_URL, NEXTAUTH_URL, NEXTAUTH_SECRET placeholders that frontend needs</reason>
+      </file>
+      <file>
+        <path>backend/Dockerfile</path>
+        <kind>dockerfile</kind>
+        <symbol>Multi-stage build pattern</symbol>
+        <lines>all</lines>
+        <reason>Reference for multi-stage Dockerfile pattern (development/production targets) to follow for frontend</reason>
+      </file>
+    </code>
+    <dependencies>
+      <ecosystem name="node">
+        <package>next@15.0.3</package>
+        <package>react@19.x</package>
+        <package>typescript@5.x</package>
+        <package>tailwindcss@3.4.x</package>
+        <package>eslint</package>
+        <package>zustand@5</package>
+        <package>@tanstack/react-query@5</package>
+        <package>react-hook-form</package>
+        <package>zod</package>
+        <package>@hookform/resolvers</package>
+      </ecosystem>
+      <ecosystem name="node-dev">
+        <package>openapi-typescript@7</package>
+      </ecosystem>
+      <ecosystem name="shadcn">
+        <package>shadcn@2.1.6</package>
+        <component>button</component>
+        <component>card</component>
+        <component>input</component>
+        <component>form</component>
+        <component>table</component>
+        <component>dialog</component>
+        <component>toast</component>
+        <component>badge</component>
+        <component>tabs</component>
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="architecture">Directory structure must match: src/app/, src/components/ui/, src/lib/, src/hooks/, src/stores/</constraint>
+    <constraint source="architecture">Use App Router (not Pages Router) with RSC support</constraint>
+    <constraint source="architecture">TypeScript in strict mode required</constraint>
+    <constraint source="ux">Warm Indigo theme colors must be exact hex values from UX spec</constraint>
+    <constraint source="docker">Dockerfile must have multi-stage build with development and production targets</constraint>
+    <constraint source="docker">Development target must support hot reload via volume mounts</constraint>
+    <constraint source="dependencies">Exact versions per Architecture: Next.js 15.0.3, shadcn 2.1.6, React Query 5.x, Zustand 5.x</constraint>
+    <constraint source="story-1-2">Follow same Dockerfile pattern as backend (multi-stage, non-root user for production)</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Backend API</name>
+      <kind>REST endpoint</kind>
+      <signature>http://localhost:8000/api/v1/*</signature>
+      <path>backend/app/main.py</path>
+    </interface>
+    <interface>
+      <name>Backend Health Check</name>
+      <kind>REST endpoint</kind>
+      <signature>GET /health returns {"status": "ok"}</signature>
+      <path>backend/app/main.py</path>
+    </interface>
+    <interface>
+      <name>CORS Configuration</name>
+      <kind>middleware</kind>
+      <signature>Backend allows http://localhost:3000 origin</signature>
+      <path>backend/app/main.py</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Frontend tests use Jest + React Testing Library pattern. TypeScript strict mode ensures type safety. ESLint enforces code quality. Component tests should verify rendering and basic interactions. Integration tests verify API connectivity in later epics.</standards>
+    <locations>
+      <location>frontend/__tests__/</location>
+      <location>frontend/src/**/*.test.tsx</location>
+    </locations>
+    <ideas>
+      <idea acId="AC6">Test that npm run dev script exists and starts server</idea>
+      <idea acId="AC7">Test that home page renders with expected title and components</idea>
+      <idea acId="AC3,AC8">Test that Tailwind custom colors are available in compiled CSS</idea>
+      <idea acId="AC4">Test that shadcn/ui Button component renders without errors</idea>
+      <idea acId="AC9,AC10">Test Docker build completes without errors</idea>
+    </ideas>
+  </tests>
+</story-context>

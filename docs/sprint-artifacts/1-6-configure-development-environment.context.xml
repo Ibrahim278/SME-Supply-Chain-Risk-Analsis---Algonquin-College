@@ -1,0 +1,266 @@
+<story-context id="1-6-configure-development-environment" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>6</storyId>
+    <title>Configure Development Environment</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-6-configure-development-environment.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>documented setup instructions and dev tooling</iWant>
+    <soThat>new developers can onboard quickly and maintain code quality</soThat>
+    <tasks>
+      <task id="1" ac="1">Create docker-compose.dev.yml with development-specific settings for postgres, redis, minio</task>
+      <task id="2" ac="5,6,7,8">Install backend dev dependencies (pytest, pytest-asyncio, black, ruff, mypy)</task>
+      <task id="3" ac="5">Configure pytest with pytest.ini or pyproject.toml, create sample test</task>
+      <task id="4" ac="6">Configure black in pyproject.toml (line-length: 88, py312)</task>
+      <task id="5" ac="7">Configure ruff in pyproject.toml (E, F, I, W rules)</task>
+      <task id="6" ac="8">Configure mypy in pyproject.toml (strict mode)</task>
+      <task id="7" ac="9">Verify frontend ESLint configuration exists</task>
+      <task id="8" ac="10">Configure Prettier for frontend (.prettierrc, format script)</task>
+      <task id="9" ac="11">Configure pre-commit hooks (.pre-commit-config.yaml)</task>
+      <task id="10" ac="12">Complete .env.example with all required variables</task>
+      <task id="11" ac="13">Update README.md with complete setup instructions</task>
+      <task id="12" ac="1-13">Run verification tests for all configurations</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1">Running `docker compose -f docker-compose.dev.yml up` starts all services (postgres, redis, minio)</criterion>
+    <criterion id="AC2">Backend runs with hot reload via `uvicorn app.main:app --reload`</criterion>
+    <criterion id="AC3">Frontend runs with hot reload via `npm run dev`</criterion>
+    <criterion id="AC4">Database migrations run successfully via `alembic upgrade head`</criterion>
+    <criterion id="AC5">Backend tests execute via `pytest` (test framework configured)</criterion>
+    <criterion id="AC6">Backend code formatting configured: `black` formats code</criterion>
+    <criterion id="AC7">Backend linting configured: `ruff` checks code</criterion>
+    <criterion id="AC8">Backend type checking configured: `mypy` validates types</criterion>
+    <criterion id="AC9">Frontend linting configured: ESLint checks code</criterion>
+    <criterion id="AC10">Frontend formatting configured: Prettier formats code</criterion>
+    <criterion id="AC11">Pre-commit hooks configured for automatic formatting on commit</criterion>
+    <criterion id="AC12">`.env.example` contains all required environment variables with descriptions</criterion>
+    <criterion id="AC13">README.md contains complete setup instructions that work from fresh clone</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>System Architecture</title>
+        <section>Backend Dependencies, Frontend Dependencies, Assumptions</section>
+        <snippet>Python 3.12+ required for modern async features. Node.js 20 LTS required for Next.js 15. Specifies pytest, black, ruff, mypy for backend and ESLint, Prettier for frontend.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>AC13, Development Environment Setup Sequence</section>
+        <snippet>Defines development environment acceptance criteria: black, ruff, mypy run on backend; eslint, prettier on frontend. Documents setup sequence.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.6</section>
+        <snippet>Story 1.6 requires documented setup instructions and dev tooling so new developers can onboard quickly and maintain code quality.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/1-5-setup-supporting-infrastructure-redis-minio.md</path>
+        <title>Previous Story (1.5)</title>
+        <section>Dev Agent Record, Completion Notes</section>
+        <snippet>Infrastructure complete: docker-compose.yml has postgres, redis, minio configured. Config pattern in app/core/config.py. Async patterns established.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <file>
+        <path>docker-compose.yml</path>
+        <kind>infrastructure</kind>
+        <symbol>production docker compose</symbol>
+        <lines>1-124</lines>
+        <reason>Base compose file with all services - dev compose should reference this or extract common services</reason>
+      </file>
+      <file>
+        <path>backend/requirements.txt</path>
+        <kind>dependencies</kind>
+        <symbol>production dependencies</symbol>
+        <lines>1-30</lines>
+        <reason>Lists all production dependencies - dev requirements extend this file</reason>
+      </file>
+      <file>
+        <path>backend/requirements-dev.txt</path>
+        <kind>dependencies</kind>
+        <symbol>dev dependencies</symbol>
+        <lines>1-15</lines>
+        <reason>Already exists with pytest, black, ruff, mypy - verify versions and completeness</reason>
+      </file>
+      <file>
+        <path>backend/app/main.py</path>
+        <kind>entrypoint</kind>
+        <symbol>FastAPI app</symbol>
+        <reason>Main backend entry point - verify hot reload works with uvicorn --reload</reason>
+      </file>
+      <file>
+        <path>backend/app/core/config.py</path>
+        <kind>config</kind>
+        <symbol>Settings class</symbol>
+        <reason>pydantic-settings configuration - may need updates for dev settings</reason>
+      </file>
+      <file>
+        <path>frontend/package.json</path>
+        <kind>dependencies</kind>
+        <symbol>npm configuration</symbol>
+        <lines>1-43</lines>
+        <reason>Already has eslint, needs prettier added as devDependency and format script</reason>
+      </file>
+      <file>
+        <path>frontend/.eslintrc.json</path>
+        <kind>config</kind>
+        <symbol>eslint configuration</symbol>
+        <reason>ESLint already configured by create-next-app - verify functionality</reason>
+      </file>
+      <file>
+        <path>.env.example</path>
+        <kind>config</kind>
+        <symbol>environment template</symbol>
+        <lines>1-81</lines>
+        <reason>Already comprehensive - verify all variables documented with descriptions</reason>
+      </file>
+      <file>
+        <path>README.md</path>
+        <kind>docs</kind>
+        <symbol>project documentation</symbol>
+        <lines>1-150</lines>
+        <reason>Already has setup instructions - verify completeness, add dev commands section</reason>
+      </file>
+    </code>
+
+    <dependencies>
+      <python>
+        <package name="fastapi" version="0.115.6" />
+        <package name="uvicorn" version="0.32.1" />
+        <package name="sqlalchemy" version="2.0.36" />
+        <package name="asyncpg" version="0.30.0" />
+        <package name="alembic" version="1.14.0" />
+        <package name="pydantic-settings" version="2.6.1" />
+        <package name="structlog" version="24.4.0" />
+        <package name="redis" version="5.2.0" />
+        <package name="arq" version="0.26.1" />
+        <package name="aioboto3" version="13.2.0" />
+        <package name="pytest" version="8.3.4" dev="true" />
+        <package name="pytest-asyncio" version="0.24.0" dev="true" />
+        <package name="black" version="24.10.0" dev="true" />
+        <package name="ruff" version="0.8.2" dev="true" />
+        <package name="mypy" version="1.13.0" dev="true" />
+        <package name="pre-commit" version="latest" dev="true" note="to install" />
+      </python>
+      <node>
+        <package name="next" version="15.0.3" />
+        <package name="react" version="19.0.0-rc" />
+        <package name="typescript" version="5.x" />
+        <package name="tailwindcss" version="3.4.x" />
+        <package name="eslint" version="8.x" />
+        <package name="eslint-config-next" version="15.0.3" />
+        <package name="prettier" version="latest" dev="true" note="to install" />
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="docs/architecture.md">Python 3.12+ required for modern async features</constraint>
+    <constraint source="docs/architecture.md">Node.js 20 LTS required for Next.js 15</constraint>
+    <constraint source="docs/sprint-artifacts/tech-spec-epic-1.md">All code must pass black, ruff, mypy (backend) and ESLint, Prettier (frontend)</constraint>
+    <constraint source="docs/sprint-artifacts/1-5-setup-supporting-infrastructure-redis-minio.md">Follow async patterns established in prior stories</constraint>
+    <constraint source="story">Backend tools configured via pyproject.toml (single config file)</constraint>
+    <constraint source="story">Pre-commit config at project root covers both frontend and backend</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>docker compose dev</name>
+      <kind>CLI command</kind>
+      <signature>docker compose -f docker-compose.dev.yml up [-d]</signature>
+      <path>docker-compose.dev.yml</path>
+    </interface>
+    <interface>
+      <name>uvicorn dev server</name>
+      <kind>CLI command</kind>
+      <signature>uvicorn app.main:app --reload [--port 8000]</signature>
+      <path>backend/app/main.py</path>
+    </interface>
+    <interface>
+      <name>alembic migrations</name>
+      <kind>CLI command</kind>
+      <signature>alembic upgrade head</signature>
+      <path>backend/alembic/</path>
+    </interface>
+    <interface>
+      <name>pytest</name>
+      <kind>CLI command</kind>
+      <signature>pytest [backend/tests/]</signature>
+      <path>backend/tests/</path>
+    </interface>
+    <interface>
+      <name>black formatter</name>
+      <kind>CLI command</kind>
+      <signature>black [--check] backend/</signature>
+      <path>backend/pyproject.toml</path>
+    </interface>
+    <interface>
+      <name>ruff linter</name>
+      <kind>CLI command</kind>
+      <signature>ruff check backend/</signature>
+      <path>backend/pyproject.toml</path>
+    </interface>
+    <interface>
+      <name>mypy type checker</name>
+      <kind>CLI command</kind>
+      <signature>mypy backend/app/</signature>
+      <path>backend/pyproject.toml</path>
+    </interface>
+    <interface>
+      <name>npm lint</name>
+      <kind>CLI command</kind>
+      <signature>npm run lint</signature>
+      <path>frontend/package.json</path>
+    </interface>
+    <interface>
+      <name>npm format</name>
+      <kind>CLI command</kind>
+      <signature>npm run format</signature>
+      <path>frontend/package.json</path>
+    </interface>
+    <interface>
+      <name>pre-commit</name>
+      <kind>CLI command</kind>
+      <signature>pre-commit run --all-files</signature>
+      <path>.pre-commit-config.yaml</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Backend uses pytest with pytest-asyncio for async test support. Tests should be placed in backend/tests/ directory. Follow existing patterns from architecture documentation. Frontend testing framework not yet configured (scope for future epic).
+    </standards>
+    <locations>
+      <location>backend/tests/</location>
+      <location>backend/tests/test_health.py (to create as sample)</location>
+    </locations>
+    <ideas>
+      <idea ac="1">Test: `docker compose -f docker-compose.dev.yml up -d` starts postgres, redis, minio containers healthy</idea>
+      <idea ac="2">Test: `uvicorn app.main:app --reload` starts backend, changes to .py files trigger reload</idea>
+      <idea ac="3">Test: `npm run dev` starts frontend on port 3000</idea>
+      <idea ac="4">Test: `alembic upgrade head` runs without errors</idea>
+      <idea ac="5">Test: `pytest` discovers and runs tests in backend/tests/</idea>
+      <idea ac="6">Test: `black --check backend/` passes on formatted code</idea>
+      <idea ac="7">Test: `ruff check backend/` passes with no errors</idea>
+      <idea ac="8">Test: `mypy backend/app/` runs with acceptable output</idea>
+      <idea ac="9">Test: `npm run lint` executes ESLint successfully</idea>
+      <idea ac="10">Test: `npm run format` formats TS/JS files with Prettier</idea>
+      <idea ac="11">Test: `pre-commit run --all-files` executes all hooks</idea>
+      <idea ac="12">Test: .env.example contains DATABASE_URL, REDIS_URL, MINIO_*, JWT_SECRET, LLM_* variables</idea>
+      <idea ac="13">Test: Following README instructions from fresh clone results in working system</idea>
+    </ideas>
+  </tests>
+</story-context>

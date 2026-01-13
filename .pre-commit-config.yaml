@@ -1,0 +1,56 @@
+# SME Supply Chain Risk Analysis - Pre-commit hooks configuration
+# Install hooks: pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # General hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  # Backend Python hooks
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        files: ^backend/
+        language_version: python3
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.2
+    hooks:
+      - id: ruff
+        files: ^backend/
+        args: [--fix, --exit-non-zero-on-fix]
+
+  # Frontend and local hooks
+  - repo: local
+    hooks:
+      - id: backend-mypy
+        name: mypy (backend)
+        entry: bash -c 'cd backend && source venv/bin/activate && mypy app/'
+        language: system
+        files: ^backend/app/.*\.py$
+        pass_filenames: false
+
+      - id: frontend-eslint
+        name: ESLint
+        entry: npm run --prefix frontend lint
+        language: system
+        files: ^frontend/src/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+
+      - id: frontend-prettier
+        name: Prettier
+        entry: npm run --prefix frontend format
+        language: system
+        files: ^frontend/src/.*\.(ts|tsx|js|jsx|json|css|md)$
+        pass_filenames: false

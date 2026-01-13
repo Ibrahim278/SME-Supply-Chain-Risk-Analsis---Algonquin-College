@@ -1,0 +1,246 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>9</storyId>
+    <title>Migrate Tailwind CSS v4</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-9-migrate-tailwind-css-v4.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>migrate the frontend from Tailwind CSS v3.4 to Tailwind CSS v4</iWant>
+    <soThat>the project benefits from improved performance, CSS-first configuration, and modern tooling</soThat>
+    <tasks>
+      <task id="1" ac="1,2">Research and Preparation
+        <subtask>Review Tailwind CSS v4 migration guide</subtask>
+        <subtask>Audit current tailwind.config.ts for migration complexity</subtask>
+        <subtask>Identify tailwindcss-animate v4 compatibility status</subtask>
+        <subtask>Check shadcn/ui Tailwind v4 support status</subtask>
+        <subtask>Document breaking changes relevant to this project</subtask>
+      </task>
+      <task id="2" ac="1,4">Upgrade Dependencies
+        <subtask>Upgrade tailwindcss to v4.x</subtask>
+        <subtask>Update PostCSS configuration</subtask>
+        <subtask>Remove or replace tailwindcss-animate if needed</subtask>
+        <subtask>Update any other Tailwind-related dependencies</subtask>
+      </task>
+      <task id="3" ac="2,3">Migrate Configuration to CSS
+        <subtask>Create new CSS-based configuration</subtask>
+        <subtask>Migrate theme extensions (colors, border-radius, etc.)</subtask>
+        <subtask>Migrate keyframes and animations</subtask>
+        <subtask>Configure dark mode via CSS</subtask>
+        <subtask>Set up content/source paths</subtask>
+      </task>
+      <task id="4" ac="2,3">Update Global Styles
+        <subtask>Update globals.css with v4 imports</subtask>
+        <subtask>Preserve CSS custom properties for shadcn/ui</subtask>
+        <subtask>Verify CSS variable layering works correctly</subtask>
+      </task>
+      <task id="5" ac="5">Fix Component Compatibility
+        <subtask>Test each shadcn/ui component</subtask>
+        <subtask>Update any deprecated utility classes</subtask>
+        <subtask>Fix any styling regressions</subtask>
+      </task>
+      <task id="6" ac="6,7">Verification and Testing
+        <subtask>Run development server, verify no errors</subtask>
+        <subtask>Run production build, verify success</subtask>
+        <subtask>Perform visual regression check on all pages</subtask>
+        <subtask>Test responsive breakpoints</subtask>
+        <subtask>Verify hot-reload functionality</subtask>
+      </task>
+      <task id="7" ac="all">Update Documentation
+        <subtask>Update architecture.md with Tailwind v4 version</subtask>
+        <subtask>Document any configuration changes</subtask>
+        <subtask>Update README if setup instructions changed</subtask>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="AC1" title="Tailwind CSS v4 Installed">
+      <check>tailwindcss package upgraded to v4.x</check>
+      <check>PostCSS configuration updated for v4 compatibility</check>
+      <check>Any deprecated plugins removed or replaced</check>
+    </criterion>
+    <criterion id="AC2" title="CSS-First Configuration Migrated">
+      <check>tailwind.config.ts converted to CSS-based configuration</check>
+      <check>All custom theme values migrated to CSS custom properties</check>
+      <check>@theme directive used for extending defaults</check>
+      <check>Content paths configured via @source directive or automatic detection</check>
+    </criterion>
+    <criterion id="AC3" title="Custom Color Palette Preserved">
+      <check>UX color palette maintained (Primary #6366f1, Success #22c55e, Warning #f59e0b, Error #ef4444)</check>
+      <check>shadcn/ui CSS variable system preserved</check>
+      <check>Dark mode support maintained via class strategy</check>
+    </criterion>
+    <criterion id="AC4" title="Animation Plugin Migrated">
+      <check>tailwindcss-animate replaced with v4-compatible solution</check>
+      <check>Accordion and other keyframe animations preserved</check>
+      <check>All existing animations functional</check>
+    </criterion>
+    <criterion id="AC5" title="shadcn/ui Components Compatible">
+      <check>All existing shadcn/ui components render correctly</check>
+      <check>Component styling unchanged visually</check>
+      <check>class-variance-authority patterns still functional</check>
+    </criterion>
+    <criterion id="AC6" title="Build and Development Working">
+      <check>npm run dev starts without errors</check>
+      <check>npm run build completes successfully</check>
+      <check>Hot-reload working for Tailwind classes</check>
+      <check>No console warnings related to Tailwind</check>
+    </criterion>
+    <criterion id="AC7" title="Visual Regression Verified">
+      <check>Home page renders identically to pre-migration</check>
+      <check>All UI components display correctly</check>
+      <check>Responsive breakpoints function as expected</check>
+    </criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>Frontend Setup / Decision Summary</section>
+        <snippet>UI Components: shadcn/ui + Tailwind 3.x / 3.4.x. Frontend initialized with npx create-next-app@15 and npx shadcn@3 init.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.3: Setup Frontend Foundation</section>
+        <snippet>Next.js 15.x with Tailwind CSS and shadcn/ui. Tailwind config includes UX color palette with Warm Indigo theme.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <file>
+        <path>frontend/tailwind.config.ts</path>
+        <kind>config</kind>
+        <symbol>Config</symbol>
+        <lines>1-113</lines>
+        <reason>Primary Tailwind configuration file to be migrated to CSS-first format. Contains theme extensions, colors, animations, and plugin declarations.</reason>
+      </file>
+      <file>
+        <path>frontend/src/app/globals.css</path>
+        <kind>styles</kind>
+        <symbol>CSS variables</symbol>
+        <lines>1-73</lines>
+        <reason>Global CSS with @tailwind directives and shadcn/ui CSS custom properties. Will be expanded for v4 CSS-first configuration.</reason>
+      </file>
+      <file>
+        <path>frontend/postcss.config.mjs</path>
+        <kind>config</kind>
+        <symbol>PostCSS config</symbol>
+        <lines>1-9</lines>
+        <reason>PostCSS configuration referencing tailwindcss plugin. May need updates for v4.</reason>
+      </file>
+      <file>
+        <path>frontend/src/lib/utils.ts</path>
+        <kind>utility</kind>
+        <symbol>cn()</symbol>
+        <lines>1-8</lines>
+        <reason>Class name utility using clsx and tailwind-merge. Core to shadcn/ui pattern, must remain functional.</reason>
+      </file>
+      <file>
+        <path>frontend/src/components/ui/accordion.tsx</path>
+        <kind>component</kind>
+        <symbol>Accordion, AccordionContent</symbol>
+        <lines>43-55</lines>
+        <reason>Uses animate-accordion-up and animate-accordion-down classes from tailwindcss-animate. Key test for animation migration.</reason>
+      </file>
+      <file>
+        <path>frontend/src/components/ui/button.tsx</path>
+        <kind>component</kind>
+        <symbol>Button</symbol>
+        <reason>shadcn/ui component using cva patterns with Tailwind classes. Test for class-variance-authority compatibility.</reason>
+      </file>
+      <file>
+        <path>frontend/src/components/ui/card.tsx</path>
+        <kind>component</kind>
+        <symbol>Card</symbol>
+        <reason>Uses bg-card, text-card-foreground CSS variables. Verify CSS variable system works in v4.</reason>
+      </file>
+      <file>
+        <path>frontend/src/components/ui/toast.tsx</path>
+        <kind>component</kind>
+        <symbol>Toast</symbol>
+        <reason>Complex component with animations and variants. Good test case for migration completeness.</reason>
+      </file>
+    </code>
+    <dependencies>
+      <node>
+        <package name="tailwindcss" version="^3.4.1" migrate="v4.x" />
+        <package name="tailwindcss-animate" version="^1.0.7" migrate="check-v4-compat" />
+        <package name="tailwind-merge" version="^3.4.0" note="keep-latest" />
+        <package name="class-variance-authority" version="^0.7.1" note="unchanged" />
+        <package name="clsx" version="^2.1.1" note="unchanged" />
+        <package name="postcss" version="^8" note="verify-v4-compat" />
+        <package name="next" version="^15.5.6" note="unchanged" />
+        <package name="react" version="^19.2.0" note="unchanged" />
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="architecture.md">
+      <rule>shadcn/ui components must remain compatible - all UI uses shadcn primitives</rule>
+    </constraint>
+    <constraint source="architecture.md">
+      <rule>Dark mode via class strategy must be preserved</rule>
+    </constraint>
+    <constraint source="ux-design">
+      <rule>UX color palette must be maintained: Primary #6366f1, Success #22c55e, Warning #f59e0b, Error #ef4444</rule>
+    </constraint>
+    <constraint source="dev-notes">
+      <rule>Incremental migration approach - test after each major change</rule>
+    </constraint>
+    <constraint source="dev-notes">
+      <rule>Create git branch before migration for rollback capability</rule>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>cn() utility</name>
+      <kind>function</kind>
+      <signature>cn(...inputs: ClassValue[]): string</signature>
+      <path>frontend/src/lib/utils.ts</path>
+      <note>Core utility for merging Tailwind classes, used by all shadcn components</note>
+    </interface>
+    <interface>
+      <name>cva patterns</name>
+      <kind>function</kind>
+      <signature>cva(base: string, config: CVAConfig)</signature>
+      <path>class-variance-authority package</path>
+      <note>Used for component variants (buttonVariants, etc.), must remain functional with v4 classes</note>
+    </interface>
+    <interface>
+      <name>CSS Custom Properties</name>
+      <kind>css-variables</kind>
+      <signature>--background, --foreground, --primary, --card, etc.</signature>
+      <path>frontend/src/app/globals.css</path>
+      <note>shadcn/ui theming system - HSL-based variables consumed by Tailwind theme</note>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Testing standards: Frontend uses ESLint for linting, Prettier for formatting. Visual regression testing should be manual for this migration story. Build verification via npm run build. Development server verification via npm run dev. No automated test framework configured yet for frontend.
+    </standards>
+    <locations>
+      <location>frontend/ (npm run build, npm run dev, npm run lint)</location>
+      <location>Manual visual inspection of all pages and components</location>
+    </locations>
+    <ideas>
+      <idea ac="AC1">Verify package.json shows tailwindcss v4.x after upgrade</idea>
+      <idea ac="AC2">Confirm tailwind.config.ts is removed or deprecated, CSS config in globals.css</idea>
+      <idea ac="AC3">Visual check that all colors render correctly in light and dark mode</idea>
+      <idea ac="AC4">Test accordion component expand/collapse animation works</idea>
+      <idea ac="AC5">Render each shadcn/ui component, verify no styling differences</idea>
+      <idea ac="AC6">npm run dev starts, npm run build succeeds, no Tailwind warnings in console</idea>
+      <idea ac="AC7">Compare screenshots before/after migration for visual regression</idea>
+    </ideas>
+  </tests>
+</story-context>

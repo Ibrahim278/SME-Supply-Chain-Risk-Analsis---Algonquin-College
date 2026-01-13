@@ -1,0 +1,46 @@
+# BMM Workflow Status
+# Tracks progress through BMad Method phases
+# Generated: 2025-11-28
+
+# STATUS DEFINITIONS:
+# ==================
+# Initial Status (before completion):
+#   - required: Must be completed to progress
+#   - optional: Can be completed but not required
+#   - recommended: Strongly suggested but not required
+#   - conditional: Required only if certain conditions met
+#   - skipped: Optional workflow that was not selected
+#
+# Completion Status:
+#   - Replace status with file path when complete (e.g., "docs/prd.md")
+
+generated: "2025-11-28"
+project: "SME Supply Chain Risk Analysis"
+selected_track: "bmad-method"
+field_type: "greenfield"
+workflow_path: "method-greenfield.yaml"
+
+workflow_status:
+  # Phase 0: Discovery (Optional)
+  phase_0_discovery:
+    brainstorm-project: skipped
+    research: skipped
+    product-brief: docs/product-brief-SME-Supply-Chain-Risk-Analysis-2025-11-28.md
+
+  # Phase 1: Planning
+  phase_1_planning:
+    prd: docs/prd.md
+    validate-prd: optional  # agent: pm
+    create-design: docs/ux-design-specification.md
+
+  # Phase 2: Solutioning
+  phase_2_solutioning:
+    create-architecture: docs/architecture.md
+    create-epics-and-stories: docs/epics.md
+    test-design: docs/test-design-system.md
+    validate-architecture: docs/architecture-validation-report-2025-11-28.md
+    implementation-readiness: docs/implementation-readiness-report-2025-11-28.md
+
+  # Phase 3: Implementation
+  phase_3_implementation:
+    sprint-planning: docs/sprint-artifacts/sprint-status.yaml
