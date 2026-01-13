@@ -1,0 +1,193 @@
+# SME Supply Chain Risk Analysis - Fully Dockerized Development
+# Complete development stack with hot-reload for all services
+# Usage: docker compose -f docker-compose.dev-full.yml up
+#
+# Option B: Fully Dockerized Development Environment
+# - No local Python/Node.js installation required
+# - All services run in containers
+# - Hot-reload works through volume mounts
+#
+# For Option A (Hybrid - local backend/frontend), use docker-compose.dev.yml
+
+services:
+  # =============================================================================
+  # Infrastructure Services (same as docker-compose.dev.yml)
+  # =============================================================================
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: sme-postgres-dev-full
+    restart: "no"
+    environment:
+      POSTGRES_DB: sme
+      POSTGRES_USER: sme
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - postgres_data_dev_full:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sme -d sme"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sme-redis-dev-full
+    restart: "no"
+    volumes:
+      - redis_data_dev_full:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    container_name: sme-minio-dev-full
+    restart: "no"
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minioadmin}
+    volumes:
+      - minio_data_dev_full:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =============================================================================
+  # Application Services
+  # =============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: sme-backend-dev-full
+    restart: "no"
+    volumes:
+      # Mount source code for hot-reload
+      - ./backend/app:/app/app
+      # Mount alembic for migrations
+      - ./backend/alembic:/app/alembic
+      # Mount tests for test execution
+      - ./backend/tests:/app/tests
+      # Mount config files
+      - ./backend/alembic.ini:/app/alembic.ini
+      - ./backend/pyproject.toml:/app/pyproject.toml
+    ports:
+      - "8000:8000"
+    environment:
+      # Database - use container hostname
+      DATABASE_URL: postgresql+asyncpg://sme:${DB_PASSWORD:-password}@postgres:5432/sme
+      # Redis - use container hostname
+      REDIS_URL: redis://redis:6379
+      # MinIO - use container hostname
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-sme-files}
+      # LLM Configuration
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
+      # Development
+      DEBUG: ${DEBUG:-true}
+      LOG_LEVEL: ${LOG_LEVEL:-DEBUG}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: sme-frontend-dev-full
+    restart: "no"
+    volumes:
+      # Mount source directories for hot-reload
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      # Mount config files
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/next.config.ts:/app/next.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/postcss.config.mjs:/app/postcss.config.mjs
+      - ./frontend/components.json:/app/components.json
+      # Anonymous volume for node_modules (prevents host conflicts)
+      - /app/node_modules
+      # Anonymous volume for .next build cache
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      # API URL - use localhost because this is client-side
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      # Enable polling for hot-reload in container
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on:
+      - backend
+
+  # =============================================================================
+  # Worker Service (Optional - for background jobs)
+  # =============================================================================
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: sme-worker-dev-full
+    restart: "no"
+    command: ["arq", "app.workers.worker.WorkerSettings"]
+    volumes:
+      # Mount source code for hot-reload
+      - ./backend/app:/app/app
+    environment:
+      # Database - use container hostname
+      DATABASE_URL: postgresql+asyncpg://sme:${DB_PASSWORD:-password}@postgres:5432/sme
+      # Redis - use container hostname
+      REDIS_URL: redis://redis:6379
+      # MinIO - use container hostname
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-sme-files}
+      # LLM Configuration
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      # Development
+      DEBUG: ${DEBUG:-true}
+      LOG_LEVEL: ${LOG_LEVEL:-DEBUG}
+    depends_on:
+      - backend
+      - redis
+    profiles:
+      - worker
+
+volumes:
+  postgres_data_dev_full:
+  redis_data_dev_full:
+  minio_data_dev_full:
